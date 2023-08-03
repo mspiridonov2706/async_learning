@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+
+  asyncio-postgresql:
+    image: postgres:15.3
+    container_name: asyncio-postgresql
+    env_file:
+      - .env
+
+  asyncio-pgadmin:
+    image: dpage/pgadmin4:7.5
+    container_name: asyncio-pgadmin
+    restart: always
+    ports:
+      - 8080:80
+    env_file:
+      - .env
