@@ -11,6 +11,9 @@ packages = [{include = "async_programming"}]
 python = "^3.11"
 requests = "^2.31.0"
 aiohttp = "^3.8.5"
+asyncpg = "^0.28.0"
+pydantic-settings = "^2.0.2"
+asyncpg-stubs = "^0.28.0"
 
 
 [tool.poetry.group.dev.dependencies]
