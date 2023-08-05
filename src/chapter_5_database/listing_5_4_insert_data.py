@@ -1,4 +1,4 @@
-"""Подключение к базе данных Postgres от имени пользователя по умолчанию"""
+"""Вставка и выборка марок"""
 
 import asyncio
 import asyncpg
@@ -14,8 +14,14 @@ async def async_main():
         password=settings.postgres.password,
         database=settings.postgres.db,
     )
-    version = connection.get_server_version()
-    print(f'Подключено! Версия Postgres равна {version}')
+
+    # await connection.execute("INSERT INTO brand VALUES(DEFAULT, 'Levis')")
+    # await connection.execute("INSERT INTO brand VALUES(DEFAULT, 'Seven')")
+
+    brand_query = 'SELECT brand_id, brand_name FROM brand'
+    results = await connection.fetch(brand_query)
+    for brand in results:
+        print(f'id: {brand["brand_id"]}, name: {brand["brand_name"]}')
     await connection.close()
 
 

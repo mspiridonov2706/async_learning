@@ -9,11 +9,13 @@ class BaseConfig(BaseSettings):
 
 
 class PostgresqlSettings(BaseConfig):
-    user: str = Field(default=..., alias="POSTGRES_USER")
-    password: str = Field(default=..., alias="POSTGRES_PASSWORD")
-    db: str = Field(default=..., alias="POSTGRES_DB")
-    port: int = Field(default=..., alias="POSTGRES_PORT")
-    host: str = Field(default=..., alias="POSTGRES_HOST")
+    model_config = SettingsConfigDict(env_prefix='POSTGRES_', case_sensitive=False)
+
+    user: str = Field(default=...)
+    password: str = Field(default=...)
+    db: str = Field(default=...)
+    port: int = Field(default=...)
+    host: str = Field(default=...)
 
 
 class Settings(BaseConfig):

@@ -1,4 +1,6 @@
-"""Подключение к базе данных Postgres от имени пользователя по умолчанию"""
+"""Создание транзакции"""
+
+from __future__ import annotations
 
 import asyncio
 import asyncpg
@@ -14,8 +16,14 @@ async def async_main():
         password=settings.postgres.password,
         database=settings.postgres.db,
     )
-    version = connection.get_server_version()
-    print(f'Подключено! Версия Postgres равна {version}')
+    async with connection.transaction():
+        await connection.execute("INSERT INTO brand VALUES(DEFAULT, 'brand_1')")
+        await connection.execute("INSERT INTO brand VALUES(DEFAULT, 'brand_2')")
+
+    query = """SELECT brand_name FROM brand WHERE brand_name LIKE 'brand%'"""
+    brands = await connection.fetch(query)
+    print(brands)
+
     await connection.close()
 
 

@@ -1,4 +1,6 @@
-"""Подключение к базе данных Postgres от имени пользователя по умолчанию"""
+"""Перемещение по курсору и выборка записей"""
+
+from __future__ import annotations
 
 import asyncio
 import asyncpg
@@ -14,8 +16,13 @@ async def async_main():
         password=settings.postgres.password,
         database=settings.postgres.db,
     )
-    version = connection.get_server_version()
-    print(f'Подключено! Версия Postgres равна {version}')
+    async with connection.transaction():
+        query = 'SELECT product_id, product_name from product'
+        cursor = await connection.cursor(query)
+        await cursor.forward(500)
+        products = await cursor.fetch(100)
+        for product in products:
+            print(product)
     await connection.close()
 
 
