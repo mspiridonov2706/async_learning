@@ -1,4 +1,4 @@
-from src.chapter_6_multiprocessing.listing_6_15_event_loop import main
+from src.chapter_7_threading.listint_7_8_lock import main
 
 
 if __name__ == "__main__":
