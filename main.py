@@ -1,4 +1,4 @@
-from src.chapter_7_threading.listint_7_8_lock import main
+from src.chapter_7_threading.listing_7_19_numpy_average_async import main
 
 
 if __name__ == "__main__":
