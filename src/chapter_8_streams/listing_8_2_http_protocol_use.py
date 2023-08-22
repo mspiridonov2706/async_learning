@@ -1,0 +1,28 @@
+"""Использование протокола"""
+
+import asyncio
+from asyncio import AbstractEventLoop
+
+from listing_8_1_http_protocol import HTTPGetClientProtocol
+
+
+async def make_request(host: str, port: int, loop: AbstractEventLoop) -> str:
+    def protocol_factory():
+        return HTTPGetClientProtocol(host, loop)
+
+    _, protocol = await loop.create_connection(protocol_factory, host=host, port=port)
+    return await protocol.get_response()
+
+
+async def run():
+    loop = asyncio.get_running_loop()
+    result = await make_request('www.example.com', 80, loop)
+    print(result)
+
+
+def main():
+    asyncio.run(run())
+
+
+if __name__ == "__main__":
+    main()
