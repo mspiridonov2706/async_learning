@@ -1,4 +1,4 @@
-from src.chapter_8_streams.listing_8_6_input_async import main
+from src.chapter_8_streams.listing_8_10_async_delay import main
 
 
 if __name__ == "__main__":
