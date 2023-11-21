@@ -12,21 +12,21 @@ from .listing_8_7_input_utils import (
     delete_line,
     restore_cursor_position,
     save_cursor_position,
-    move_to_top_of_screen
+    move_to_top_of_screen,
 )
 from .listing_8_8_read_stdin import read_line
 from .listing_8_9_message_storage import MessageStore
 
 
 async def sleep(delay: int, message_store: MessageStore):
-    await message_store.append(f'Начало задержки {delay}')
+    await message_store.append(f"Начало задержки {delay}")
     await asyncio.sleep(delay)
-    await message_store.append(f'Конец задержки {delay}')
+    await message_store.append(f"Конец задержки {delay}")
 
 
 async def run():
     tty.setcbreak(sys.stdin)
-    os.system('clear')
+    os.system("clear")
 
     rows = move_to_bottom_of_screen()
 
@@ -42,8 +42,9 @@ async def run():
     stdin_reader = await create_stdin_reader()
     while True:
         line = await read_line(stdin_reader)
+        print("lalal")
         delay_time = int(line)
-        asyncio.create_task(sleep(delay_time, messages))
+        await asyncio.create_task(sleep(delay_time, messages))
 
 
 def main():
