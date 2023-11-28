@@ -14,6 +14,14 @@ asyncpg = "^0.28.0"
 pydantic-settings = "^2.0.2"
 asyncpg-stubs = "^0.28.0"
 numpy = "^1.26.2"
+flask = "^3.0.0"
+psycopg = "^3.1.13"
+gunicorn = "^21.2.0"
+uvicorn = "^0.24.0.post1"
+starlette = "^0.32.0.post1"
+websockets = "^12.0"
+django = "3.2.8"
+setuptools = "^69.0.2"
 
 
 [build-system]
