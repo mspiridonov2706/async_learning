@@ -1,4 +1,4 @@
-from utils.time_it import time_it
+from src.util.time_it import time_it
 
 
 def print_fib(number: int) -> None:
@@ -9,13 +9,14 @@ def print_fib(number: int) -> None:
             return 1
         else:
             return fib(n - 1) + fib(n - 2)
-    print(f'fib({number}) равно {fib(number)}')
+
+    print(f"fib({number}) равно {fib(number)}")
 
 
-@time_it
+@time_it()
 def fibs_no_threading():
-    print_fib(35)
-    print_fib(36)
+    print_fib(40)
+    print_fib(39)
 
 
 def main():

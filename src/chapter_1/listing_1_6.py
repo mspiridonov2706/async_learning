@@ -1,6 +1,6 @@
 import threading
 
-from ..util.time_it import time_it
+from src.util.time_it import time_it
 
 
 def print_fib(number: int) -> None:
@@ -11,13 +11,14 @@ def print_fib(number: int) -> None:
             return 1
         else:
             return fib(n - 1) + fib(n - 2)
-    print(f'fib({number}) равно {fib(number)}')
+
+    print(f"fib({number}) равно {fib(number)}")
 
 
 @time_it("Время выполнения с потоками:")
 def fibs_with_threads():
-    fortieth_thread = threading.Thread(target=print_fib, args=(35,))
-    forty_first_thread = threading.Thread(target=print_fib, args=(36,))
+    fortieth_thread = threading.Thread(target=print_fib, args=(40,))
+    forty_first_thread = threading.Thread(target=print_fib, args=(39,))
     fortieth_thread.start()
     forty_first_thread.start()
     fortieth_thread.join()

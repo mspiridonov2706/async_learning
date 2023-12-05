@@ -1,4 +1,4 @@
-from src.chapter_9_web_apps.listing_9_2_aiohttp_server_with_db import main
+from src.chapter_10_microservices.listing_10_12_circuit_breaker_testing import main
 
 
 if __name__ == "__main__":

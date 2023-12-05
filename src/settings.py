@@ -5,17 +5,19 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class BaseConfig(BaseSettings):
-    model_config = SettingsConfigDict(env_file='.env', env_file_encoding='utf-8', extra='ignore')
+    model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8", extra="ignore")
 
 
 class PostgresqlSettings(BaseConfig):
-    model_config = SettingsConfigDict(env_prefix='POSTGRES_', case_sensitive=False)
+    model_config = SettingsConfigDict(env_prefix="POSTGRES_", case_sensitive=False)
 
     user: str = Field(default=...)
     password: str = Field(default=...)
     db: str = Field(default=...)
     port: int = Field(default=...)
     host: str = Field(default=...)
+    db_cart: str = Field(default=...)
+    db_favorites: str = Field(default=...)
 
 
 class Settings(BaseConfig):
