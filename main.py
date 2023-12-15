@@ -1,4 +1,4 @@
-from src.chapter_10_microservices.listing_10_12_circuit_breaker_testing import main
+from src.chapter_11_synchronization.listing_11_12_events_file_server import main
 
 
 if __name__ == "__main__":
