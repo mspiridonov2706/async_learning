@@ -19,49 +19,65 @@ LOCK = Lock()
 
 
 class MyQueue(Queue):
-    is_writing: bool = False
+    _is_paused: bool = False
+
+    def pause(self) -> None:
+        self._is_paused = True
+
+    def resume(self) -> None:
+        self._is_paused = False
+
+    @property
+    def is_paused(self) -> bool:
+        return self._is_paused
 
 
-class DictOperation(Enum):
+class Operation(Enum):
     READ = auto()
     WRITE = auto()
 
 
 @dataclass
-class DictProccess:
-    operation: DictOperation
+class QueueOperation:
+    operation: Operation
     key: str
 
     async def operate(self, queue: MyQueue):
         match self.operation:
-            case DictOperation.READ:
-                await read(self.key, queue)
-            case DictOperation.WRITE:
-                await write(self.key, queue)
+            case Operation.READ:
+                await self._read()
+            case Operation.WRITE:
+                await self._write(queue)
+
+    async def _read(self):
+        await read(self.key)
+
+    async def _write(self, queue: MyQueue):
+        async with LOCK:
+            try:
+                queue.pause()
+                await write(self.key)
+            finally:
+                queue.resume()
 
 
 async def worker(queue: MyQueue):
     while not queue.empty():
-        work_item: DictProccess = await queue.get()
+        while queue.is_paused:
+            await asyncio.sleep(0)
+        work_item: QueueOperation = await queue.get()
         await work_item.operate(queue)
         queue.task_done()
 
 
-async def write(key: str, queue: MyQueue):
-    async with LOCK:
-        try:
-            queue.is_writing = True
-            print(f"Изменяю {key}")
-            USERS_DICT[key] = "Updated"
-            print(USERS_DICT[key])
-            await asyncio.sleep(2)
-        finally:
-            queue.is_writing = False
+async def write(key: str):
+    print(f"Изменяю {key}")
+    USERS_DICT[key] = "Updated"
+    print(USERS_DICT[key])
+    await asyncio.sleep(2)
 
 
-async def read(key: str, queue: MyQueue):
-    while queue.is_writing:
-        await asyncio.sleep(0)
+async def read(key: str):
     print(f"Читаю {key}")
     print(USERS_DICT[key])
     await asyncio.sleep(1)
@@ -70,17 +86,17 @@ async def read(key: str, queue: MyQueue):
 async def main():
     queue = MyQueue()
     work_items = [
-        DictProccess(DictOperation.READ, "John"),
-        DictProccess(DictOperation.READ, "Terry"),
-        DictProccess(DictOperation.READ, "Graham"),
-        DictProccess(DictOperation.WRITE, "Eric"),
-        DictProccess(DictOperation.WRITE, "Terry"),
-        DictProccess(DictOperation.READ, "Eric"),
-        DictProccess(DictOperation.READ, "Terry"),
-        DictProccess(DictOperation.READ, "Terry"),
-        DictProccess(DictOperation.WRITE, "Graham"),
-        DictProccess(DictOperation.WRITE, "Eric"),
-        DictProccess(DictOperation.READ, "Graham"),
+        QueueOperation(Operation.READ, "John"),
+        QueueOperation(Operation.READ, "Terry"),
+        QueueOperation(Operation.READ, "Graham"),
+        QueueOperation(Operation.WRITE, "Eric"),
+        QueueOperation(Operation.WRITE, "Terry"),
+        QueueOperation(Operation.READ, "Eric"),
+        QueueOperation(Operation.READ, "Terry"),
+        QueueOperation(Operation.READ, "Terry"),
+        QueueOperation(Operation.WRITE, "Graham"),
+        QueueOperation(Operation.WRITE, "Eric"),
+        QueueOperation(Operation.READ, "Graham"),
     ]
     worker_tasks = [asyncio.create_task(worker(queue)) for _ in range(len(work_items))]
     [queue.put_nowait(work) for work in work_items]
